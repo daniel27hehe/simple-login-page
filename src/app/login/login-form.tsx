@@ -53,6 +53,10 @@ export function LoginForm() {
       if (error) {
         if (error.message.includes('rate limit')) {
           setLockoutMsg('Too many attempts. Please wait before trying again.')
+        } else if (error.message === 'Invalid login credentials') {
+          toast.error('Incorrect email or password')
+        } else if (error.message === 'Email not confirmed') {
+          toast.error('Account is waiting for verification')
         } else {
           toast.error(error.message)
         }
