@@ -152,8 +152,9 @@ export function SignupForm() {
         return
       }
 
-      toast.success('Account created! Please check your email to confirm.')
-      // Optionally redirect or show success UI
+      toast.success('Account created successfully!')
+      router.push('/dashboard')
+      router.refresh()
     } catch (error) {
       toast.error('An unexpected error occurred')
     } finally {
