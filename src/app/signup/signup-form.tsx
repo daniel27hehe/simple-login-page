@@ -13,6 +13,7 @@ import { Lock, Mail, Eye, EyeOff, User, Phone, CheckCircle2, XCircle } from 'luc
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 const reservedWords = ['admin', 'root', 'superuser', 'system', 'support']
@@ -58,12 +59,12 @@ export function SignupForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  
+
   // Real-time states
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
   const [emailStatus, setEmailStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: '', color: '' })
-  
+
   const form = useForm<SignupValues>({
     resolver: zodResolver(signupSchema),
     mode: 'onChange', // Trigger validation on typing
@@ -121,7 +122,7 @@ export function SignupForm() {
     if (score === 2) { text = 'Fair'; color = 'bg-yellow-500' }
     if (score === 3) { text = 'Good'; color = 'bg-blue-500' }
     if (score === 4) { text = 'Strong'; color = 'bg-green-500' }
-    
+
     setPasswordStrength({ score, text, color })
   }, [watchPassword])
 
@@ -185,7 +186,7 @@ export function SignupForm() {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-gray-400" />
               </div>
-              <Input id="fullName" placeholder="John Doe" className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('fullName')} />
+              <Input id="fullName" placeholder="Andi Daniel Tenri Dio" className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('fullName')} />
             </div>
             {form.formState.errors.fullName && <p className="text-xs text-red-500">{form.formState.errors.fullName.message}</p>}
           </div>
@@ -196,7 +197,7 @@ export function SignupForm() {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span className="text-gray-400 font-medium">@</span>
               </div>
-              <Input id="username" placeholder="johndoe123" className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('username')} />
+              <Input id="username" placeholder="danielsigma27" className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('username')} />
               {usernameStatus === 'checking' && <div className="absolute right-3 top-3 w-4 h-4 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin" />}
               {usernameStatus === 'available' && <CheckCircle2 className="absolute right-3 top-2.5 h-5 w-5 text-green-500" />}
               {usernameStatus === 'taken' && <XCircle className="absolute right-3 top-2.5 h-5 w-5 text-red-500" />}
@@ -210,18 +211,54 @@ export function SignupForm() {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="h-5 w-5 text-gray-400" />
               </div>
-              <Input id="email" type="email" placeholder="name@company.com" className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('email')} />
+              <Input id="email" type="email" placeholder="andidaniel73x@gmail.com.com" className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('email')} />
             </div>
             {form.formState.errors.email && <p className="text-xs text-red-500">{form.formState.errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-sm font-semibold text-[#1A1A1A]">Phone Number</Label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Phone className="h-5 w-5 text-gray-400" />
+            <div className="flex space-x-2">
+              <Select defaultValue="+62" onValueChange={(val) => {
+                const currentPhone = form.getValues('phone') || ''
+                const numberPart = currentPhone.includes(' ') ? currentPhone.split(' ')[1] : currentPhone.replace(/^\+\d+/, '')
+                form.setValue('phone', `${val}${numberPart}`, { shouldValidate: true })
+              }}>
+                <SelectTrigger className="w-[100px] h-11 bg-gray-50/50 border-gray-200 focus:bg-white">
+                  <SelectValue placeholder="+62" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="+62">🇮🇩 +62</SelectItem>
+                  <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                  <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                  <SelectItem value="+61">🇦🇺 +61</SelectItem>
+                  <SelectItem value="+81">🇯🇵 +81</SelectItem>
+                  <SelectItem value="+65">🇸🇬 +65</SelectItem>
+                  <SelectItem value="+60">🇲🇾 +60</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  placeholder="812345678" 
+                  className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" 
+                  {...form.register('phone')} 
+                  onChange={(e) => {
+                    // Extract only numbers from the input
+                    const rawVal = e.target.value
+                    // Keep the plus sign and country code prefix intact if user is typing the full string
+                    // But since we have a select, we'll strip letters and symbols except '+'
+                    const numericVal = rawVal.replace(/[^\d+]/g, '')
+                    e.target.value = numericVal
+                    form.setValue('phone', numericVal, { shouldValidate: true })
+                  }}
+                />
               </div>
-              <Input id="phone" type="tel" placeholder="+62 812..." className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white" {...form.register('phone')} />
             </div>
             {form.formState.errors.phone && <p className="text-xs text-red-500">{form.formState.errors.phone.message}</p>}
           </div>
@@ -237,7 +274,7 @@ export function SignupForm() {
                 {showPassword ? <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" /> : <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />}
               </button>
             </div>
-            
+
             {watchPassword.length > 0 && (
               <div className="mt-2">
                 <div className="flex items-center justify-between text-xs mb-1">

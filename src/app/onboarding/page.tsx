@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { OnboardingForm } from './onboarding-form'
+import { PageTransition } from '@/components/page-transition'
 
 export const metadata = {
   title: 'Complete Your Profile — AppName',
@@ -31,8 +32,11 @@ export default async function OnboardingPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#C7D2FE] blur-[100px] opacity-60"></div>
       
       <div className="w-full max-w-md z-10 relative">
-        <OnboardingForm />
+        <PageTransition>
+          <OnboardingForm />
+        </PageTransition>
       </div>
     </main>
   )
 }
+

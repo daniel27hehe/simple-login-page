@@ -29,7 +29,7 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [lockoutMsg, setLockoutMsg] = useState('')
-  
+
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -114,7 +114,7 @@ export function LoginForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="name@company.com"
+                placeholder="andidaniel73x@gmail.com"
                 className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white transition-colors"
                 {...form.register('email')}
               />

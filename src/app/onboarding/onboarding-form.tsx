@@ -12,6 +12,7 @@ import { Phone, CheckCircle2, XCircle, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const reservedWords = ['admin', 'root', 'superuser', 'system', 'support']
@@ -34,7 +35,7 @@ export function OnboardingForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
-  
+
   const form = useForm<OnboardingValues>({
     resolver: zodResolver(onboardingSchema),
     mode: 'onChange',
@@ -120,7 +121,7 @@ export function OnboardingForm() {
               </div>
               <Input
                 id="username"
-                placeholder="johndoe123"
+                placeholder="danielsigma27"
                 className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white transition-colors"
                 {...form.register('username')}
               />
@@ -133,17 +134,44 @@ export function OnboardingForm() {
 
           <div className="space-y-2 text-left">
             <Label htmlFor="phone" className="text-sm font-semibold text-[#1A1A1A]">Phone Number</Label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Phone className="h-5 w-5 text-gray-400" />
+            <div className="flex space-x-2">
+              <Select defaultValue="+62" onValueChange={(val) => {
+                const currentPhone = form.getValues('phone') || ''
+                const numberPart = currentPhone.includes(' ') ? currentPhone.split(' ')[1] : currentPhone.replace(/^\+\d+/, '')
+                form.setValue('phone', `${val}${numberPart}`, { shouldValidate: true })
+              }}>
+                <SelectTrigger className="w-[100px] h-11 bg-gray-50/50 border-gray-200 focus:bg-white">
+                  <SelectValue placeholder="+62" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="+62">🇮🇩 +62</SelectItem>
+                  <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                  <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                  <SelectItem value="+61">🇦🇺 +61</SelectItem>
+                  <SelectItem value="+81">🇯🇵 +81</SelectItem>
+                  <SelectItem value="+65">🇸🇬 +65</SelectItem>
+                  <SelectItem value="+60">🇲🇾 +60</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                </div>
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  placeholder="812345678" 
+                  className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white transition-colors" 
+                  {...form.register('phone')} 
+                  onChange={(e) => {
+                    const rawVal = e.target.value
+                    const numericVal = rawVal.replace(/[^\d+]/g, '')
+                    e.target.value = numericVal
+                    form.setValue('phone', numericVal, { shouldValidate: true })
+                  }}
+                />
               </div>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="+62 812..."
-                className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white transition-colors"
-                {...form.register('phone')}
-              />
             </div>
             {form.formState.errors.phone && <p className="text-sm text-red-500">{form.formState.errors.phone.message}</p>}
           </div>
