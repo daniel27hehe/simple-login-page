@@ -84,8 +84,9 @@ export function SignupForm() {
   const watchEmail = watch('email')
   const watchPassword = watch('password')
   const watchPhone = watch('phone') || '+62'
-  const countryCode = watchPhone.match(/^\+\d+/)?.[0] || '+62'
-  const localNumber = watchPhone.slice(countryCode.length)
+  const countryMatch = watchPhone.match(/^\+(62|1|44|61|81|65|60)/)
+  const countryCode = countryMatch ? countryMatch[0] : '+62'
+  const localNumber = watchPhone.startsWith(countryCode) ? watchPhone.slice(countryCode.length) : watchPhone.replace(/^\+\d*/, '')
 
   const supabase = createClient()
 
