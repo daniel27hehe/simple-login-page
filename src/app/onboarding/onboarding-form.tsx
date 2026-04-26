@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import { Phone, CheckCircle2, XCircle, Sparkles } from 'lucide-react'
 
@@ -43,10 +43,7 @@ export function OnboardingForm() {
 
   const watchUsername = form.watch('username')
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = createClient()
 
   useEffect(() => {
     if (!watchUsername || watchUsername.length < 3 || form.formState.errors.username) {

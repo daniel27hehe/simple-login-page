@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import { Lock, Mail, Eye, EyeOff, User, Phone, CheckCircle2, XCircle } from 'lucide-react'
 
@@ -83,10 +83,7 @@ export function SignupForm() {
   const watchEmail = watch('email')
   const watchPassword = watch('password')
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = createClient()
 
   // Username checking
   useEffect(() => {

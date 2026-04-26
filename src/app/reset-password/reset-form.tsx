@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import { Lock, Eye, EyeOff, CheckCircle2, ShieldCheck } from 'lucide-react'
 
@@ -63,10 +63,7 @@ export function ResetForm() {
   async function onSubmit(data: ResetValues) {
     setIsLoading(true)
     try {
-      const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
+      const supabase = createClient()
 
       const { error } = await supabase.auth.updateUser({
         password: data.password
