@@ -43,6 +43,9 @@ export function OnboardingForm() {
   })
 
   const watchUsername = form.watch('username')
+  const watchPhone = form.watch('phone') || '+62'
+  const countryCode = watchPhone.match(/^\+\d+/)?.[0] || '+62'
+  const localNumber = watchPhone.slice(countryCode.length)
 
   const supabase = createClient()
 
@@ -135,10 +138,8 @@ export function OnboardingForm() {
           <div className="space-y-2 text-left">
             <Label htmlFor="phone" className="text-sm font-semibold text-[#1A1A1A]">Phone Number</Label>
             <div className="flex space-x-2">
-              <Select defaultValue="+62" onValueChange={(val) => {
-                const currentPhone = form.getValues('phone') || ''
-                const numberPart = currentPhone.includes(' ') ? currentPhone.split(' ')[1] : currentPhone.replace(/^\+\d+/, '')
-                form.setValue('phone', `${val}${numberPart}`, { shouldValidate: true })
+              <Select value={countryCode} onValueChange={(val) => {
+                form.setValue('phone', `${val}${localNumber}`, { shouldValidate: true })
               }}>
                 <SelectTrigger className="w-[100px] h-11 bg-gray-50/50 border-gray-200 focus:bg-white">
                   <SelectValue placeholder="+62" />
@@ -163,13 +164,12 @@ export function OnboardingForm() {
                   type="tel" 
                   placeholder="812345678" 
                   className="pl-10 h-11 bg-gray-50/50 border-gray-200 focus:bg-white transition-colors" 
-                  {...form.register('phone')} 
+                  value={localNumber}
                   onChange={(e) => {
-                    const rawVal = e.target.value
-                    const numericVal = rawVal.replace(/[^\d+]/g, '')
-                    e.target.value = numericVal
-                    form.setValue('phone', numericVal, { shouldValidate: true })
+                    const numericVal = e.target.value.replace(/\D/g, '')
+                    form.setValue('phone', `${countryCode}${numericVal}`, { shouldValidate: true })
                   }}
+                  onBlur={() => form.trigger('phone')}
                 />
               </div>
             </div>
